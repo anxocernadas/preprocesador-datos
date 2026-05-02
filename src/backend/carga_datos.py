@@ -19,3 +19,35 @@ def cargar_csv(ruta_archivo: str) -> pd.DataFrame:
         return pd.read_csv(ruta_archivo, sep=None, engine="python")
     except Exception as error:
         raise ValueError(f"No se pudo cargar el archivo CSV: {error}")
+    
+def obtener_hojas_excel(ruta_archivo: str) -> list[str]:
+    """
+    Devuelve la lista de hojas disponibles en un archivo Excel.
+    """
+    if not os.path.exists(ruta_archivo):
+        raise FileNotFoundError(f"No existe el archivo: {ruta_archivo}")
+
+    if not ruta_archivo.lower().endswith(".xlsx"):
+        raise ValueError("El archivo debe tener extensión .xlsx")
+
+    try:
+        return pd.ExcelFile(ruta_archivo).sheet_names
+    except Exception as error:
+        raise ValueError(f"No se pudieron leer las hojas del archivo Excel: {error}")
+
+
+def cargar_excel(ruta_archivo: str, hoja: str | None = None) -> pd.DataFrame:
+    """
+    Carga un archivo Excel y devuelve su contenido como DataFrame.
+    Si no se indica hoja, carga la primera hoja.
+    """
+    if not os.path.exists(ruta_archivo):
+        raise FileNotFoundError(f"No existe el archivo: {ruta_archivo}")
+
+    if not ruta_archivo.lower().endswith(".xlsx"):
+        raise ValueError("El archivo debe tener extensión .xlsx")
+
+    try:
+        return pd.read_excel(ruta_archivo, sheet_name=hoja if hoja else 0)
+    except Exception as error:
+        raise ValueError(f"No se pudo cargar el archivo Excel: {error}")
