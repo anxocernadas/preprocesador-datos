@@ -1,0 +1,1 @@
+ # Funciones para cargar datos (CSV, Excel, SQLite)
