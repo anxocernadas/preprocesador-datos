@@ -2,7 +2,7 @@
 
 import os
 import pandas as pd
-
+import sqlite3
 
 def cargar_csv(ruta_archivo: str) -> pd.DataFrame:
     """
@@ -51,3 +51,44 @@ def cargar_excel(ruta_archivo: str, hoja: str | None = None) -> pd.DataFrame:
         return pd.read_excel(ruta_archivo, sheet_name=hoja if hoja else 0)
     except Exception as error:
         raise ValueError(f"No se pudo cargar el archivo Excel: {error}")
+    
+
+def obtener_tablas_sqlite(ruta_archivo: str) -> list[str]:
+    """
+    Devuelve las tablas disponibles en una base de datos SQLite.
+    """
+    if not os.path.exists(ruta_archivo):
+        raise FileNotFoundError(f"No existe el archivo: {ruta_archivo}")
+
+    if not ruta_archivo.lower().endswith((".sqlite", ".db")):
+        raise ValueError("El archivo debe tener extensión .sqlite o .db")
+
+    try:
+        conexion = sqlite3.connect(ruta_archivo)
+        cursor = conexion.cursor()
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tablas = [fila[0] for fila in cursor.fetchall()]
+
+        conexion.close()
+        return tablas
+
+    except Exception as error:
+        raise ValueError(f"No se pudieron obtener las tablas: {error}")
+
+
+def cargar_sqlite(ruta_archivo: str, tabla: str) -> pd.DataFrame:
+    """
+    Carga una tabla de una base de datos SQLite.
+    """
+    if not os.path.exists(ruta_archivo):
+        raise FileNotFoundError(f"No existe el archivo: {ruta_archivo}")
+
+    try:
+        conexion = sqlite3.connect(ruta_archivo)
+        df = pd.read_sql_query(f"SELECT * FROM {tabla}", conexion)
+        conexion.close()
+        return df
+
+    except Exception as error:
+        raise ValueError(f"No se pudo cargar la tabla: {error}")
