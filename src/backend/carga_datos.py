@@ -83,6 +83,9 @@ def cargar_sqlite(ruta_archivo: str, tabla: str) -> pd.DataFrame:
     """
     if not os.path.exists(ruta_archivo):
         raise FileNotFoundError(f"No existe el archivo: {ruta_archivo}")
+    
+    if not ruta_archivo.lower().endswith((".sqlite", ".db")):
+        raise ValueError("El archivo debe tener extensión .sqlite o .db")    
 
     try:
         conexion = sqlite3.connect(ruta_archivo)
