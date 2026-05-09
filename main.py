@@ -1,13 +1,14 @@
 from src.frontend.interfaz_carga_datos import menu_carga_datos
-from src.frontend.interfaz_seleccion_columnas import (
-    menu_seleccion_columnas,
-)
+from src.frontend.interfaz_seleccion_columnas import menu_seleccion_columnas
+from src.frontend.interfaz_tratamiento_nulos import menu_tratamiento_nulos
+
 
 def mostrar_menu_principal(
     datos,
     archivo_cargado,
     features,
     target,
+    nulos_tratados,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -29,8 +30,15 @@ def mostrar_menu_principal(
         else:
             print("      [-] 2.1 Selección de columnas (pendiente)")
 
-        print("      [✗] 2.2 Manejo de datos faltantes (pendiente)")
-        print("      [✗] 2.3 Transformación de datos categóricos (pendiente)")
+        if nulos_tratados:
+            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
+            print("      [-] 2.3 Transformación de datos categóricos (pendiente)")
+        else:
+            print("      [-] 2.2 Manejo de datos faltantes (pendiente)")
+            print(
+                "      [✗] 2.3 Transformación de datos categóricos "
+                "(requiere manejo de valores faltantes)"
+            )
         print("      [✗] 2.4 Normalización y escalado (pendiente)")
         print("      [✗] 2.5 Detección y manejo de valores atípicos (pendiente)")
 
@@ -45,6 +53,7 @@ def main():
     archivo_cargado = None
     features = None
     target = None
+    nulos_tratados = False
 
     while True:
         mostrar_menu_principal(
@@ -52,6 +61,7 @@ def main():
             archivo_cargado,
             features,
             target,
+            nulos_tratados,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -63,19 +73,31 @@ def main():
                 archivo_cargado = nuevo_archivo
                 features = None
                 target = None
+                nulos_tratados = False
 
         elif opcion == "2":
             if datos is None:
                 print("Error: primero debe cargar datos.")
 
-            else:
-                nuevas_features, nuevo_target = (
-                    menu_seleccion_columnas(datos)
-                )
+            elif features is None or target is None:
+                nuevas_features, nuevo_target = menu_seleccion_columnas(datos)
+                
 
                 if nuevas_features is not None:
                     features = nuevas_features
                     target = nuevo_target
+                    nulos_tratados = False
+
+            else:
+                datos, completado = menu_tratamiento_nulos(
+                    datos,
+                    features,
+                    target,
+                )
+
+                if completado:
+                    nulos_tratados = True
+
 
         elif opcion == "3":
             print("Visualización de datos pendiente de implementar.")

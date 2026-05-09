@@ -83,8 +83,8 @@ def menu_tratamiento_nulos(datos, features, target):
             )
 
         elif opcion == "5":
-            valor = input(
-                "\nIngrese un valor para reemplazar los valores faltantes: "
+            valor = float(
+                input("\nIngrese un valor numérico para reemplazar los valores faltantes: ")
             )
 
             datos = rellenar_con_valor_constante(
