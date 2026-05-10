@@ -1,6 +1,7 @@
 from src.frontend.interfaz_carga_datos import menu_carga_datos
 from src.frontend.interfaz_seleccion_columnas import menu_seleccion_columnas
 from src.frontend.interfaz_tratamiento_nulos import menu_tratamiento_nulos
+from src.frontend.interfaz_transformacion_categorica import menu_transformacion_categorica
 
 
 def mostrar_menu_principal(
@@ -9,6 +10,7 @@ def mostrar_menu_principal(
     features,
     target,
     nulos_tratados,
+    transformacion_categorica_realizada,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -31,15 +33,46 @@ def mostrar_menu_principal(
             print("      [-] 2.1 Selección de columnas (pendiente)")
 
         if nulos_tratados:
+
             print("      [✓] 2.2 Manejo de datos faltantes (completado)")
-            print("      [-] 2.3 Transformación de datos categóricos (pendiente)")
+
+            if transformacion_categorica_realizada:
+
+                print(
+                    "      [✓] 2.3 Transformación de datos categóricos "
+                    "(completado)"
+                )
+
+                print(
+                    "      [-] 2.4 Normalización y escalado "
+                    "(pendiente)"
+                )
+
+            else:
+
+                print(
+                    "      [-] 2.3 Transformación de datos categóricos "
+                    "(pendiente)"
+                )
+
+                print(
+                    "      [✗] 2.4 Normalización y escalado "
+                    "(requiere transformación categórica)"
+                )
+
         else:
+
             print("      [-] 2.2 Manejo de datos faltantes (pendiente)")
+
             print(
                 "      [✗] 2.3 Transformación de datos categóricos "
                 "(requiere manejo de valores faltantes)"
             )
-        print("      [✗] 2.4 Normalización y escalado (pendiente)")
+
+            print(
+                "      [✗] 2.4 Normalización y escalado "
+                "(requiere transformación categórica)"
+            )
         print("      [✗] 2.5 Detección y manejo de valores atípicos (pendiente)")
 
         print("[✗] 3. Visualización de datos (requiere preprocesado completo)")
@@ -54,6 +87,7 @@ def main():
     features = None
     target = None
     nulos_tratados = False
+    transformacion_categorica_realizada = False
 
     while True:
         mostrar_menu_principal(
@@ -62,6 +96,7 @@ def main():
             features,
             target,
             nulos_tratados,
+            transformacion_categorica_realizada,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -74,21 +109,25 @@ def main():
                 features = None
                 target = None
                 nulos_tratados = False
+                transformacion_categorica_realizada = False
 
         elif opcion == "2":
+
             if datos is None:
                 print("Error: primero debe cargar datos.")
 
             elif features is None or target is None:
+
                 nuevas_features, nuevo_target = menu_seleccion_columnas(datos)
-                
 
                 if nuevas_features is not None:
                     features = nuevas_features
                     target = nuevo_target
                     nulos_tratados = False
+                    transformacion_categorica_realizada = False
 
-            else:
+            elif not nulos_tratados:
+
                 datos, completado = menu_tratamiento_nulos(
                     datos,
                     features,
@@ -97,6 +136,16 @@ def main():
 
                 if completado:
                     nulos_tratados = True
+
+            elif not transformacion_categorica_realizada:
+
+                datos, completado = menu_transformacion_categorica(
+                    datos,
+                    features,
+                    )
+                
+                if completado:
+                    transformacion_categorica_realizada = True
 
 
         elif opcion == "3":
