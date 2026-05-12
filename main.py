@@ -2,6 +2,7 @@ from src.frontend.interfaz_carga_datos import menu_carga_datos
 from src.frontend.interfaz_seleccion_columnas import menu_seleccion_columnas
 from src.frontend.interfaz_tratamiento_nulos import menu_tratamiento_nulos
 from src.frontend.interfaz_transformacion_categorica import menu_transformacion_categorica
+from src.frontend.interfaz_normalizacion import menu_normalizacion
 
 
 def mostrar_menu_principal(
@@ -11,6 +12,7 @@ def mostrar_menu_principal(
     target,
     nulos_tratados,
     transformacion_categorica_realizada,
+    normalizacion_realizada,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -43,11 +45,19 @@ def mostrar_menu_principal(
                     "(completado)"
                 )
 
-                print(
-                    "      [-] 2.4 Normalización y escalado "
-                    "(pendiente)"
-                )
+                if normalizacion_realizada:
 
+                    print(
+                        "      [✓] 2.4 Normalización y escalado "
+                        "(completado)"
+                    )
+
+                else:
+
+                    print(
+                        "      [-] 2.4 Normalización y escalado "
+                        "(pendiente)"
+                    )
             else:
 
                 print(
@@ -73,7 +83,16 @@ def mostrar_menu_principal(
                 "      [✗] 2.4 Normalización y escalado "
                 "(requiere transformación categórica)"
             )
-        print("      [✗] 2.5 Detección y manejo de valores atípicos (pendiente)")
+        if normalizacion_realizada:
+            print(
+                "      [-] 2.5 Detección y manejo de valores atípicos "
+                "(pendiente)"
+            )
+        else:
+            print(
+                "      [✗] 2.5 Detección y manejo de valores atípicos "
+                "(requiere normalización)"
+            )
 
         print("[✗] 3. Visualización de datos (requiere preprocesado completo)")
         print("[✗] 4. Exportar datos (requiere preprocesado completo)")
@@ -88,6 +107,7 @@ def main():
     target = None
     nulos_tratados = False
     transformacion_categorica_realizada = False
+    normalizacion_realizada = False
 
     while True:
         mostrar_menu_principal(
@@ -97,6 +117,7 @@ def main():
             target,
             nulos_tratados,
             transformacion_categorica_realizada,
+            normalizacion_realizada,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -110,6 +131,7 @@ def main():
                 target = None
                 nulos_tratados = False
                 transformacion_categorica_realizada = False
+                normalizacion_realizada = False
 
         elif opcion == "2":
 
@@ -125,6 +147,8 @@ def main():
                     target = nuevo_target
                     nulos_tratados = False
                     transformacion_categorica_realizada = False
+                    normalizacion_realizada = False
+
 
             elif not nulos_tratados:
 
@@ -146,6 +170,16 @@ def main():
                 
                 if completado:
                     transformacion_categorica_realizada = True
+
+            elif not normalizacion_realizada:
+
+                datos, completado = menu_normalizacion(
+                    datos,
+                    features,
+                )
+
+                if completado:
+                    normalizacion_realizada = True
 
 
         elif opcion == "3":
