@@ -47,3 +47,40 @@ def contar_valores_atipicos(datos, features):
             atipicos[columna] = cantidad
 
     return atipicos
+
+
+def eliminar_filas_con_atipicos(datos, columnas):
+    """
+    Elimina filas que contienen valores atípicos.
+    """
+    datos_copia = datos.copy()
+
+    mascara_total = pd.Series(False, index=datos.index)
+
+    for columna in columnas:
+        mascara_total = (
+            mascara_total
+            | obtener_mascara_atipicos(datos_copia, columna)
+        )
+
+    return datos_copia[~mascara_total]
+
+
+def reemplazar_atipicos_con_mediana(datos, columnas):
+    """
+    Reemplaza valores atípicos con la mediana de la columna.
+    """
+    datos_copia = datos.copy()
+
+    for columna in columnas:
+
+        mascara = obtener_mascara_atipicos(
+            datos_copia,
+            columna,
+        )
+
+        mediana = datos_copia[columna].median()
+
+        datos_copia.loc[mascara, columna] = mediana
+
+    return datos_copia
