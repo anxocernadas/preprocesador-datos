@@ -3,6 +3,7 @@ from src.frontend.interfaz_seleccion_columnas import menu_seleccion_columnas
 from src.frontend.interfaz_tratamiento_nulos import menu_tratamiento_nulos
 from src.frontend.interfaz_transformacion_categorica import menu_transformacion_categorica
 from src.frontend.interfaz_normalizacion import menu_normalizacion
+from src.frontend.interfaz_valores_atipicos import menu_valores_atipicos
 
 
 def mostrar_menu_principal(
@@ -13,6 +14,7 @@ def mostrar_menu_principal(
     nulos_tratados,
     transformacion_categorica_realizada,
     normalizacion_realizada,
+    valores_atipicos_tratados,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -84,17 +86,34 @@ def mostrar_menu_principal(
                 "(requiere transformación categórica)"
             )
         if normalizacion_realizada:
-            print(
-                "      [-] 2.5 Detección y manejo de valores atípicos "
-                "(pendiente)"
-            )
+
+            if valores_atipicos_tratados:
+                print(
+                    "      [✓] 2.5 Detección y manejo de valores atípicos "
+                    "(completado)"
+                )
+            else:
+                print(
+                    "      [-] 2.5 Detección y manejo de valores atípicos "
+                    "(pendiente)"
+                )
+
         else:
             print(
                 "      [✗] 2.5 Detección y manejo de valores atípicos "
                 "(requiere normalización)"
-            )
+            )       
 
-        print("[✗] 3. Visualización de datos (requiere preprocesado completo)")
+        if valores_atipicos_tratados:
+
+            print("[-] 3. Visualización de datos (pendiente)")
+
+        else:
+
+            print(
+                "[✗] 3. Visualización de datos "
+                "(requiere preprocesado completo)"
+            )
         print("[✗] 4. Exportar datos (requiere preprocesado completo)")
 
     print("[✓] 5. Salir")
@@ -108,6 +127,7 @@ def main():
     nulos_tratados = False
     transformacion_categorica_realizada = False
     normalizacion_realizada = False
+    valores_atipicos_tratados = False
 
     while True:
         mostrar_menu_principal(
@@ -118,6 +138,7 @@ def main():
             nulos_tratados,
             transformacion_categorica_realizada,
             normalizacion_realizada,
+            valores_atipicos_tratados,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -132,6 +153,7 @@ def main():
                 nulos_tratados = False
                 transformacion_categorica_realizada = False
                 normalizacion_realizada = False
+                valores_atipicos_tratados = False
 
         elif opcion == "2":
 
@@ -148,6 +170,7 @@ def main():
                     nulos_tratados = False
                     transformacion_categorica_realizada = False
                     normalizacion_realizada = False
+                    valores_atipicos_tratados = False
 
 
             elif not nulos_tratados:
@@ -166,9 +189,15 @@ def main():
                 datos, completado = menu_transformacion_categorica(
                     datos,
                     features,
-                    )
+                )
                 
                 if completado:
+                    features = [
+                        columna
+                        for columna in features
+                        if columna in datos.columns
+                    ]
+
                     transformacion_categorica_realizada = True
 
             elif not normalizacion_realizada:
@@ -180,7 +209,16 @@ def main():
 
                 if completado:
                     normalizacion_realizada = True
+            
+            elif not valores_atipicos_tratados:
 
+                datos, completado = menu_valores_atipicos(
+                    datos,
+                    features,
+                )
+
+                if completado:
+                    valores_atipicos_tratados = True
 
         elif opcion == "3":
             print("Visualización de datos pendiente de implementar.")
