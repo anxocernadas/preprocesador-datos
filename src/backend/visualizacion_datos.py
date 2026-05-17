@@ -1,5 +1,6 @@
 import pandas as pd
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def obtener_columnas_numericas(datos, columnas):
     """
@@ -59,3 +60,25 @@ def obtener_distribucion_categorica(datos, columnas):
         distribuciones[columna] = datos[columna].value_counts().to_dict()
 
     return distribuciones
+
+
+def mostrar_histogramas(datos, columnas):
+    """
+    Muestra histogramas de las columnas numéricas seleccionadas.
+    """
+    numericas = obtener_columnas_numericas(datos, columnas)
+
+    for columna in numericas:
+
+        plt.figure(figsize=(8, 5))
+
+        sns.histplot(
+            datos[columna],
+            kde=True,
+        )
+
+        plt.title(f"Histograma de {columna}")
+        plt.xlabel(columna)
+        plt.ylabel("Frecuencia")
+
+        plt.show()
