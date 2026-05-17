@@ -82,3 +82,36 @@ def mostrar_histogramas(datos, columnas):
         plt.ylabel("Frecuencia")
 
         plt.show()
+
+
+def mostrar_graficos_dispersion(
+    datos_originales,
+    datos_procesados,
+    columnas,
+):
+    """
+    Muestra gráficos de dispersión antes y después
+    de la normalización.
+    """
+    numericas = obtener_columnas_numericas(
+        datos_procesados,
+        columnas,
+    )
+
+    for columna in numericas:
+
+        plt.figure(figsize=(8, 5))
+
+        sns.scatterplot(
+            x=datos_originales[columna],
+            y=datos_procesados[columna],
+        )
+
+        plt.title(
+            f"Gráfico de dispersión de {columna}"
+        )
+
+        plt.xlabel("Datos originales")
+        plt.ylabel("Datos procesados")
+
+        plt.show()
