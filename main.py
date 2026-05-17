@@ -4,6 +4,7 @@ from src.frontend.interfaz_tratamiento_nulos import menu_tratamiento_nulos
 from src.frontend.interfaz_transformacion_categorica import menu_transformacion_categorica
 from src.frontend.interfaz_normalizacion import menu_normalizacion
 from src.frontend.interfaz_valores_atipicos import menu_valores_atipicos
+from src.frontend.interfaz_visualizacion import menu_visualizacion
 
 
 def mostrar_menu_principal(
@@ -15,6 +16,7 @@ def mostrar_menu_principal(
     transformacion_categorica_realizada,
     normalizacion_realizada,
     valores_atipicos_tratados,
+    visualizacion_realizada,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -104,17 +106,20 @@ def mostrar_menu_principal(
                 "(requiere normalización)"
             )       
 
-        if valores_atipicos_tratados:
+        if visualizacion_realizada:
+            print("[✓] 3. Visualización de datos (completado)")
+            print("[-] 4. Exportar datos (pendiente)")
 
+        elif valores_atipicos_tratados:
             print("[-] 3. Visualización de datos (pendiente)")
+            print("[✗] 4. Exportar datos (requiere visualización de datos)")
 
         else:
-
             print(
                 "[✗] 3. Visualización de datos "
                 "(requiere preprocesado completo)"
             )
-        print("[✗] 4. Exportar datos (requiere preprocesado completo)")
+            print("[✗] 4. Exportar datos (requiere visualización de datos)")
 
     print("[✓] 5. Salir")
 
@@ -128,6 +133,8 @@ def main():
     transformacion_categorica_realizada = False
     normalizacion_realizada = False
     valores_atipicos_tratados = False
+    datos_originales = None
+    visualizacion_realizada = False
 
     while True:
         mostrar_menu_principal(
@@ -139,6 +146,7 @@ def main():
             transformacion_categorica_realizada,
             normalizacion_realizada,
             valores_atipicos_tratados,
+            visualizacion_realizada,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -146,6 +154,7 @@ def main():
             nuevos_datos, nuevo_archivo = menu_carga_datos()
 
             if nuevos_datos is not None:
+                datos_originales = nuevos_datos.copy()
                 datos = nuevos_datos
                 archivo_cargado = nuevo_archivo
                 features = None
@@ -154,6 +163,7 @@ def main():
                 transformacion_categorica_realizada = False
                 normalizacion_realizada = False
                 valores_atipicos_tratados = False
+                visualizacion_realizada = False
 
         elif opcion == "2":
 
@@ -221,7 +231,25 @@ def main():
                     valores_atipicos_tratados = True
 
         elif opcion == "3":
-            print("Visualización de datos pendiente de implementar.")
+
+            if not valores_atipicos_tratados:
+                print(
+                    "No es posible visualizar los datos hasta "
+                    "que se complete el preprocesado."
+                )
+                print(
+                    "Por favor, finalice el manejo de valores "
+                    "atípicos antes de continuar."
+                )
+
+            else:
+                menu_visualizacion(
+                    datos,
+                    features,
+                    datos_originales,
+                )
+
+                visualizacion_realizada = True
 
         elif opcion == "4":
             print("Exportación de datos pendiente de implementar.")
