@@ -115,3 +115,32 @@ def mostrar_graficos_dispersion(
         plt.ylabel("Datos procesados")
 
         plt.show()
+
+
+def mostrar_heatmap_correlacion(datos, columnas):
+    """
+    Muestra un heatmap de correlación entre columnas numéricas.
+    """
+
+    numericas = obtener_columnas_numericas(datos, columnas)
+
+    if len(numericas) < 2:
+        print(
+            "Se necesitan al menos dos columnas numéricas "
+            "para generar el heatmap."
+        )
+        return
+
+    matriz_correlacion = datos[numericas].corr()
+
+    plt.figure(figsize=(8, 6))
+
+    sns.heatmap(
+        matriz_correlacion,
+        annot=True,
+        cmap="coolwarm",
+        fmt=".2f",
+    )
+
+    plt.title("Heatmap de correlación")
+    plt.show()
