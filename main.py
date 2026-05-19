@@ -5,6 +5,7 @@ from src.frontend.interfaz_transformacion_categorica import menu_transformacion_
 from src.frontend.interfaz_normalizacion import menu_normalizacion
 from src.frontend.interfaz_valores_atipicos import menu_valores_atipicos
 from src.frontend.interfaz_visualizacion import menu_visualizacion
+from src.frontend.interfaz_exportacion import menu_exportacion
 
 
 def mostrar_menu_principal(
@@ -17,6 +18,7 @@ def mostrar_menu_principal(
     normalizacion_realizada,
     valores_atipicos_tratados,
     visualizacion_realizada,
+    exportacion_realizada,
 ):
     print("\n=============================")
     print("Menú Principal")
@@ -108,7 +110,11 @@ def mostrar_menu_principal(
 
         if visualizacion_realizada:
             print("[✓] 3. Visualización de datos (completado)")
-            print("[-] 4. Exportar datos (pendiente)")
+
+            if exportacion_realizada:
+                print("[✓] 4. Exportar datos (completado)")
+            else:
+                print("[-] 4. Exportar datos (pendiente)")
 
         elif valores_atipicos_tratados:
             print("[-] 3. Visualización de datos (pendiente)")
@@ -135,6 +141,7 @@ def main():
     valores_atipicos_tratados = False
     datos_originales = None
     visualizacion_realizada = False
+    exportacion_realizada = False
 
     while True:
         mostrar_menu_principal(
@@ -147,6 +154,7 @@ def main():
             normalizacion_realizada,
             valores_atipicos_tratados,
             visualizacion_realizada,
+            exportacion_realizada,
         )
         opcion = input("Seleccione una opción: ")
 
@@ -164,6 +172,7 @@ def main():
                 normalizacion_realizada = False
                 valores_atipicos_tratados = False
                 visualizacion_realizada = False
+                exportacion_realizada = False
 
         elif opcion == "2":
 
@@ -252,7 +261,23 @@ def main():
                 visualizacion_realizada = True
 
         elif opcion == "4":
-            print("Exportación de datos pendiente de implementar.")
+
+            if not visualizacion_realizada:
+                print(
+                    "No es posible exportar los datos hasta "
+                    "que se complete el preprocesado y la visualización."
+                )
+
+                print(
+                    "Por favor, finalice todas las etapas "
+                    "antes de continuar."
+                )
+
+            else:
+                completado = menu_exportacion(datos)
+
+                if completado:
+                    exportacion_realizada = True
 
         elif opcion == "5":
             print("Saliendo de la aplicación.")
