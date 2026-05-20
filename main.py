@@ -8,6 +8,29 @@ from src.frontend.interfaz_visualizacion import menu_visualizacion
 from src.frontend.interfaz_exportacion import menu_exportacion
 
 
+def confirmar_salida():
+    print("\n=============================")
+    print("Salir de la Aplicación")
+    print("=============================")
+    print("¿Está seguro de que desea salir?")
+    print("  [1] Sí")
+    print("  [2] No")
+
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == "1":
+        print("Cerrando la aplicación...")
+        return True
+
+    elif opcion == "2":
+        print("Regresando al menú principal...")
+        return False
+
+    else:
+        print("Error: opción no válida.")
+        print("Regresando al menú principal...")
+        return False
+
 def mostrar_menu_principal(
     datos,
     archivo_cargado,
@@ -280,8 +303,8 @@ def main():
                     exportacion_realizada = True
 
         elif opcion == "5":
-            print("Saliendo de la aplicación.")
-            break
+            if confirmar_salida():
+                break
 
         else:
             print("Error: opción no válida.")
