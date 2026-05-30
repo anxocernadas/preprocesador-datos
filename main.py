@@ -151,24 +151,26 @@ def mostrar_menu_principal(
                 "(completado)"
             )
 
-        if visualizacion_realizada:
-            print("[✓] 3. Visualización de datos (completado)")
+        if valores_atipicos_tratados:
+            if visualizacion_realizada:
+                print("[✓] 3. Visualización de datos (completado)")
+            else:
+                print("[-] 3. Visualización de datos (pendiente)")
 
             if exportacion_realizada:
                 print("[✓] 4. Exportar datos (completado)")
             else:
                 print("[-] 4. Exportar datos (pendiente)")
 
-        elif valores_atipicos_tratados:
-            print("[-] 3. Visualización de datos (pendiente)")
-            print("[✗] 4. Exportar datos (requiere visualización de datos)")
-
         else:
             print(
                 "[✗] 3. Visualización de datos "
                 "(requiere preprocesado completo)"
             )
-            print("[✗] 4. Exportar datos (requiere visualización de datos)")
+            print(
+                "[✗] 4. Exportar datos "
+                "(requiere preprocesado completo)"
+            )
 
     print("[✓] 5. Salir")
 
@@ -307,14 +309,14 @@ def main():
 
         elif opcion == "4":
 
-            if not visualizacion_realizada:
+            if not valores_atipicos_tratados:
                 print(
                     "No es posible exportar los datos hasta "
-                    "que se complete el preprocesado y la visualización."
+                    "que se complete el preprocesado."
                 )
 
                 print(
-                    "Por favor, finalice todas las etapas "
+                    "Por favor, finalice el manejo de valores atípicos"
                     "antes de continuar."
                 )
 
