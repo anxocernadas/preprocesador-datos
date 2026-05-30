@@ -56,80 +56,100 @@ def mostrar_menu_principal(
     else:
         print(f"[✓] 1. Cargar datos (archivo: {archivo_cargado})")
 
-        print("[-] 2. Preprocesado de datos")
-
-        if features is not None and target is not None:
-            print("      [✓] 2.1 Selección de columnas (completado)")
+        if valores_atipicos_tratados:
+            print("[✓] 2. Preprocesado de datos")
         else:
+            print("[-] 2. Preprocesado de datos")
+
+        if features is None or target is None:
             print("      [-] 2.1 Selección de columnas (pendiente)")
-
-        if nulos_tratados:
-
-            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
-
-            if transformacion_categorica_realizada:
-
-                print(
-                    "      [✓] 2.3 Transformación de datos categóricos "
-                    "(completado)"
-                )
-
-                if normalizacion_realizada:
-
-                    print(
-                        "      [✓] 2.4 Normalización y escalado "
-                        "(completado)"
-                    )
-
-                else:
-
-                    print(
-                        "      [-] 2.4 Normalización y escalado "
-                        "(pendiente)"
-                    )
-            else:
-
-                print(
-                    "      [-] 2.3 Transformación de datos categóricos "
-                    "(pendiente)"
-                )
-
-                print(
-                    "      [✗] 2.4 Normalización y escalado "
-                    "(requiere transformación categórica)"
-                )
-
-        else:
-
-            print("      [-] 2.2 Manejo de datos faltantes (pendiente)")
-
+            print(
+                "      [✗] 2.2 Manejo de datos faltantes "
+                "(requiere selección de columnas)"
+            )
             print(
                 "      [✗] 2.3 Transformación de datos categóricos "
-                "(requiere manejo de valores faltantes)"
+                "(requiere manejo de datos faltantes)"
             )
-
             print(
                 "      [✗] 2.4 Normalización y escalado "
                 "(requiere transformación categórica)"
             )
-        if normalizacion_realizada:
-
-            if valores_atipicos_tratados:
-                print(
-                    "      [✓] 2.5 Detección y manejo de valores atípicos "
-                    "(completado)"
-                )
-            else:
-                print(
-                    "      [-] 2.5 Detección y manejo de valores atípicos "
-                    "(pendiente)"
-                )
-
-        else:
             print(
                 "      [✗] 2.5 Detección y manejo de valores atípicos "
                 "(requiere normalización)"
-            )       
+            )
+
+        elif not nulos_tratados:
+            print("      [✓] 2.1 Selección de columnas (completado)")
+            print("      [-] 2.2 Manejo de datos faltantes (pendiente)")
+            print(
+                "      [✗] 2.3 Transformación de datos categóricos "
+                "(requiere manejo de datos faltantes)"
+            )
+            print(
+                "      [✗] 2.4 Normalización y escalado "
+                "(requiere transformación categórica)"
+            )
+            print(
+                "      [✗] 2.5 Detección y manejo de valores atípicos "
+                "(requiere normalización)"
+            )
+
+        elif not transformacion_categorica_realizada:
+            print("      [✓] 2.1 Selección de columnas (completado)")
+            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
+            print(
+                "      [-] 2.3 Transformación de datos categóricos "
+                "(pendiente)"
+            )
+            print(
+                "      [✗] 2.4 Normalización y escalado "
+                "(requiere transformación categórica)"
+            )
+            print(
+                "      [✗] 2.5 Detección y manejo de valores atípicos "
+                "(requiere normalización)"
+            )
+
+        elif not normalizacion_realizada:
+            print("      [✓] 2.1 Selección de columnas (completado)")
+            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
+            print(
+                "      [✓] 2.3 Transformación de datos categóricos "
+                "(completado)"
+            )
+            print("      [-] 2.4 Normalización y escalado (pendiente)")
+            print(
+                "      [✗] 2.5 Detección y manejo de valores atípicos "
+                "(requiere normalización)"
+            )
+
+        elif not valores_atipicos_tratados:
+            print("      [✓] 2.1 Selección de columnas (completado)")
+            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
+            print(
+                "      [✓] 2.3 Transformación de datos categóricos "
+                "(completado)"
+            )
+            print("      [✓] 2.4 Normalización y escalado (completado)")
+            print(
+                "      [-] 2.5 Detección y manejo de valores atípicos "
+                "(pendiente)"
+            )
+
+        else:
+            print("      [✓] 2.1 Selección de columnas (completado)")
+            print("      [✓] 2.2 Manejo de datos faltantes (completado)")
+            print(
+                "      [✓] 2.3 Transformación de datos categóricos "
+                "(completado)"
+            )
+            print("      [✓] 2.4 Normalización y escalado (completado)")
+            print(
+                "      [✓] 2.5 Detección y manejo de valores atípicos "
+                "(completado)"
+            )
 
         if visualizacion_realizada:
             print("[✓] 3. Visualización de datos (completado)")
@@ -213,6 +233,8 @@ def main():
                     transformacion_categorica_realizada = False
                     normalizacion_realizada = False
                     valores_atipicos_tratados = False
+                    visualizacion_realizada = False
+                    exportacion_realizada = False
 
 
             elif not nulos_tratados:
